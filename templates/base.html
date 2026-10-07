@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Fieldnote{% endblock %} · Fieldnote</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="{{ url_for('main.home') }}"><span class="brand-mark">F</span><span>fieldnote<small>PHOTO LIBRARY</small></span></a>
+  {% if current_user.is_authenticated %}
+  <div class="nav-label">YOUR LIBRARY</div>
+  <a class="nav-item" href="{{ url_for('main.dashboard') }}">◫ <span>Overview</span></a>
+  <a class="nav-item" href="{{ url_for('cases.index') }}">◎ <span>People</span></a>
+  <a class="nav-item" href="{{ url_for('cases.match') }}">⌕ <span>Compare photos</span></a>
+  <a class="nav-item" href="{{ url_for('cases.new') }}">＋ <span>Add a person</span></a>
+  <div class="sidebar-bottom"><span class="avatar">{{ current_user.username[:1]|upper }}</span><span class="user-name">{{ current_user.username }}<small>Caseworker</small></span><form action="{{ url_for('auth.logout') }}" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="icon-button" title="Sign out">↗</button></form></div>
+  {% else %}<div class="sidebar-note">A calm, private space to organize your personal photo library.</div>{% endif %}
+</aside>
+<main class="main-area">
+  {% if current_user.is_authenticated %}<header class="topbar"><span>Personal photo library</span><span class="secure-label"><i></i> Private workspace</span></header>{% endif %}
+  <section class="page-content">
+    {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+    {% block content %}{% endblock %}
+  </section>
+</main>
+</body></html>
